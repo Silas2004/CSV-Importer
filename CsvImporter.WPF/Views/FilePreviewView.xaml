@@ -1,0 +1,51 @@
+<UserControl x:Class="CsvImporter.WPF.Views.FilePreviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="Dateivorschau"
+                       FontSize="{StaticResource FontMd}" FontWeight="SemiBold" />
+            <TextBlock Text="Erste 20 Zeilen der gew&#228;hlten Datei zur &#220;berpr&#252;fung."
+                       Foreground="{StaticResource BrushTextMuted}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- File selector (shown when multiple files selected) -->
+        <Grid Grid.Row="1" Margin="0,0,0,12"
+              Visibility="{Binding HasMultipleFiles, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Datei:" VerticalAlignment="Center" Margin="0,0,8,0"
+                       Foreground="{StaticResource BrushTextMuted}" />
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding FilePaths}"
+                      SelectedItem="{Binding SelectedFile, Mode=TwoWay}" />
+        </Grid>
+
+        <!-- Preview DataGrid (AutoGenerateColumns from DataTable) -->
+        <Border Grid.Row="2" Style="{StaticResource Card}"
+                Visibility="{Binding HasPreview, Converter={StaticResource BoolToVisibility}}">
+            <DataGrid ItemsSource="{Binding Preview}"
+                      AutoGenerateColumns="True"
+                      IsReadOnly="True"
+                      CanUserResizeColumns="True"
+                      HorizontalScrollBarVisibility="Auto" />
+        </Border>
+
+        <!-- Empty state -->
+        <TextBlock Grid.Row="2"
+                   Text="Keine Vorschau verf&#252;gbar."
+                   Foreground="{StaticResource BrushTextMuted}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Visibility="{Binding HasPreview, Converter={StaticResource InvertBoolToVisibility}}" />
+    </Grid>
+</UserControl>
+

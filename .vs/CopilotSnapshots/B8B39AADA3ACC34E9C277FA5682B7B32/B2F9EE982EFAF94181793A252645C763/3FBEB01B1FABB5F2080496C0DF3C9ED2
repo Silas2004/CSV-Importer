@@ -1,0 +1,107 @@
+﻿<UserControl x:Class="CsvImporter.WPF.Views.ConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:h="clr-namespace:CsvImporter.WPF.Helpers"
+             xmlns:models="clr-namespace:CsvImporter.Core.Models;assembly=CsvImporter.Core">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="4">
+
+            <!-- Saved profiles row -->
+            <Label Content="Gespeicherte Profile" />
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding Profiles}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding CurrentProfile, Mode=TwoWay}" />
+                <Button Grid.Column="1" Content="Neu"
+                        Command="{Binding NewProfileCommand}"
+                        Style="{StaticResource ButtonGhost}"
+                        Padding="10,5" Margin="6,0,0,0" />
+                <Button Grid.Column="2" Content="L&#246;schen"
+                        Command="{Binding DeleteProfileCommand}"
+                        Style="{StaticResource ButtonDanger}"
+                        Padding="10,5" Margin="6,0,0,0" />
+            </Grid>
+
+            <!-- Provider -->
+            <Label Content="Datenbanksystem" />
+            <ComboBox ItemsSource="{x:Static models:DbProviderValues.All}"
+                      SelectedItem="{Binding CurrentProfile.Provider, Mode=TwoWay}"
+                      Margin="0,0,0,10" />
+
+            <!-- Profile name -->
+            <Label Content="Profilname" />
+            <TextBox Text="{Binding CurrentProfile.Name, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10" />
+
+            <!-- Host / Port -->
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="110" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                    <Label Content="Host" />
+                    <TextBox Text="{Binding CurrentProfile.Host, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Content="Port" />
+                    <!-- Added delay and validated bindings for numeric input -->
+                    <TextBox Text="{Binding CurrentProfile.Port, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnValidationError=True}" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Service name -->
+            <Label Content="Service / Datenbankname" />
+            <TextBox Text="{Binding CurrentProfile.ServiceName, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10" />
+
+            <!-- Username -->
+            <Label Content="Benutzername" />
+            <TextBox Text="{Binding CurrentProfile.Username, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10" />
+
+            <!-- Password -->
+            <Label Content="Passwort" />
+            <PasswordBox h:PasswordBoxHelper.BoundPassword="{Binding CurrentProfile.Password, Mode=TwoWay}"
+                         Margin="0,0,0,12" />
+
+            <!-- Test connection -->
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Verbindung testen"
+                        Command="{Binding TestConnectionCommand}"
+                        Padding="12,6" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"
+                           Text="{Binding ConnectionTestResult}"
+                           Visibility="{Binding HasTestResult, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{StaticResource BrushError}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding TestSuccess}" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource BrushSuccess}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <!-- Save -->
+            <Button Content="Profil speichern"
+                    Command="{Binding SaveProfileCommand}"
+                    HorizontalAlignment="Left"
+                    Padding="12,6" />
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

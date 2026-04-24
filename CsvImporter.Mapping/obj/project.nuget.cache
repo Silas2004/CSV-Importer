@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "f48zVEQB2/k=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.Mapping\\CsvImporter.Mapping.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\silas.timmermann\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512",
+    "C:\\Users\\silas.timmermann\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.0\\system.security.cryptography.protecteddata.9.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

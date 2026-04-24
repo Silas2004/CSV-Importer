@@ -1,0 +1,28 @@
+<Window x:Class="CsvImporter.WPF.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:CsvImporter.WPF.Views"
+        Title="Daten Import Wizard - Einstellungen"
+        Height="860" Width="1600"
+        Background="{StaticResource BrushBg}"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="SingleBorderWindow">
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <views:ConnectionView Grid.Row="0" />
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="0,14,0,0">
+            <TextBlock Text="Profil wird beim Schliessen als aktive Verbindung gesetzt."
+                       Foreground="{StaticResource BrushTextMuted}"
+                       VerticalAlignment="Center" Margin="0,0,16,0"
+                       FontSize="{StaticResource FontSm}" />
+            <Button Content="Schliessen" Click="CloseButton_Click" Padding="18,8" />
+        </StackPanel>
+    </Grid>
+</Window>
+

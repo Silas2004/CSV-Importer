@@ -1,0 +1,116 @@
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CsvImporter.Adapters;
+using CsvImporter.Core.Models;
+using CsvImporter.Core.Services;
+
+namespace CsvImporter.WPF.ViewModels;
+
+public partial class ConnectionViewModel : ObservableObject
+{
+    private readonly AppSettingsService _settings;
+
+    [ObservableProperty] private ConnectionProfile _currentProfile = new();
+    [ObservableProperty] private bool    _isTesting = false;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasTestResult))]
+    private string? _connectionTestResult;
+
+    [ObservableProperty] private bool _testSuccess;
+
+    public bool HasTestResult => ConnectionTestResult is not null;
+
+    public ObservableCollection<ConnectionProfile> Profiles { get; } = new();
+
+    public ConnectionViewModel(AppSettingsService settings)
+    {
+        _settings = settings;
+        foreach (var p in settings.Connections)
+            Profiles.Add(p);
+        if (Profiles.Count > 0)
+            CurrentProfile = Profiles[0];
+    }
+
+    [RelayCommand]
+    private async Task TestConnectionAsync()
+    {
+        IsTesting = true;
+        ConnectionTestResult = null;
+        try
+        {
+            await using var adapter = DbAdapterFactory.Create(CurrentProfile.Provider);
+            var ok = await adapter.TestConnectionAsync(CurrentProfile);
+            TestSuccess          = ok;
+            ConnectionTestResult = ok ? "Connection successful." : "Connection failed.";
+        }
+        catch (Exception ex)
+        {
+            TestSuccess          = false;
+            ConnectionTestResult = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            IsTesting = false;
+        }
+    }
+
+    [RelayCommand]
+    private void SaveProfile()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentProfile.Name))
+            CurrentProfile.Name = $"Profil {Profiles.Count + 1}";
+
+        var existing = Profiles.FirstOrDefault(p => p.Id == CurrentProfile.Id);
+        if (existing is null)
+        {
+            var copy = CloneProfile(CurrentProfile);
+            Profiles.Add(copy);
+            _settings.Connections.Add(copy);
+            CurrentProfile = copy;
+        }
+        else
+        {
+            CopyTo(CurrentProfile, existing);
+            CurrentProfile = existing;
+        }
+
+        _settings.Save();
+    }
+
+    [RelayCommand]
+    private void NewProfile() => CurrentProfile = new ConnectionProfile();
+
+    [RelayCommand]
+    private void DeleteProfile()
+    {
+        var existing = Profiles.FirstOrDefault(p => p.Id == CurrentProfile.Id);
+        if (existing is null) return;
+        Profiles.Remove(existing);
+        _settings.Connections.Remove(existing);
+        _settings.Save();
+        CurrentProfile = Profiles.Count > 0 ? Profiles[0] : new ConnectionProfile();
+    }
+
+    partial void OnCurrentProfileChanged(ConnectionProfile value)
+    {
+        ConnectionTestResult = null;
+        TestSuccess = false;
+    }
+
+    private static ConnectionProfile CloneProfile(ConnectionProfile src) => new()
+    {
+        Id = src.Id, Name = src.Name, Provider = src.Provider, Host = src.Host,
+        Port = src.Port, ServiceName = src.ServiceName, DbName = src.DbName,
+        Username = src.Username, Password = src.Password, Role = src.Role, IsDefault = src.IsDefault
+    };
+
+    private static void CopyTo(ConnectionProfile src, ConnectionProfile dst)
+    {
+        dst.Name = src.Name; dst.Provider = src.Provider; dst.Host = src.Host;
+        dst.Port = src.Port; dst.ServiceName = src.ServiceName; dst.DbName = src.DbName;
+        dst.Username = src.Username; dst.Password = src.Password;
+        dst.Role = src.Role; dst.IsDefault = src.IsDefault;
+    }
+}

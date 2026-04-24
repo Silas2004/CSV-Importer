@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="CsvImporter.WPF.Views.ConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:h="clr-namespace:CsvImporter.WPF.Helpers"
+             xmlns:models="clr-namespace:CsvImporter.Core.Models;assembly=CsvImporter.Core"
+             KeyboardNavigation.TabNavigation="Continue">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="4">
+
+            <Label Content="Gespeicherte Profile" Target="{Binding ElementName=ProfilesCombo}" />
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="ProfilesCombo"
+                          Grid.Column="0"
+                          ItemsSource="{Binding Profiles}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding CurrentProfile, Mode=TwoWay}"
+                          IsTextSearchEnabled="True"
+                          AutomationProperties.Name="Gespeicherte Verbindungen" />
+                <Button Grid.Column="1" Content="Neu"
+                        Command="{Binding NewProfileCommand}"
+                        Style="{StaticResource ButtonGhost}"
+                        Padding="10,5" Margin="6,0,0,0"
+                        AutomationProperties.Name="Neues Verbindungsprofil" />
+                <Button Grid.Column="2" Content="L&#246;schen"
+                        Command="{Binding DeleteProfileCommand}"
+                        Style="{StaticResource ButtonDanger}"
+                        Padding="10,5" Margin="6,0,0,0"
+                        AutomationProperties.Name="Aktuelles Verbindungsprofil loeschen" />
+            </Grid>
+
+            <Label Content="Datenbanksystem" Target="{Binding ElementName=ProviderCombo}" />
+            <ComboBox x:Name="ProviderCombo"
+                      ItemsSource="{x:Static models:DbProviderValues.All}"
+                      SelectedItem="{Binding CurrentProfile.Provider, Mode=TwoWay}"
+                      Margin="0,0,0,10"
+                      AutomationProperties.Name="Datenbanksystem" />
+
+            <Label Content="Profilname" Target="{Binding ElementName=ProfileNameText}" />
+            <TextBox x:Name="ProfileNameText"
+                     Text="{Binding CurrentProfile.Name, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10"
+                     AutomationProperties.Name="Profilname" />
+
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="110" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                    <Label Content="Host" Target="{Binding ElementName=HostText}" />
+                    <TextBox x:Name="HostText"
+                             Text="{Binding CurrentProfile.Host, UpdateSourceTrigger=PropertyChanged}"
+                             AutomationProperties.Name="Host" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Content="Port" Target="{Binding ElementName=PortText}" />
+                    <TextBox x:Name="PortText"
+                             Text="{Binding CurrentProfile.Port, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                             AutomationProperties.Name="Port" />
+                </StackPanel>
+            </Grid>
+
+            <Label Content="Service / Datenbankname" Target="{Binding ElementName=ServiceNameText}" />
+            <TextBox x:Name="ServiceNameText"
+                     Text="{Binding CurrentProfile.ServiceName, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10"
+                     AutomationProperties.Name="Service oder Datenbankname" />
+
+            <Label Content="Benutzername" Target="{Binding ElementName=UsernameText}" />
+            <TextBox x:Name="UsernameText"
+                     Text="{Binding CurrentProfile.Username, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,10"
+                     AutomationProperties.Name="Benutzername" />
+
+            <Label Content="Passwort" Target="{Binding ElementName=PasswordInput}" />
+            <PasswordBox x:Name="PasswordInput"
+                         h:PasswordBoxHelper.BoundPassword="{Binding CurrentProfile.Password, Mode=TwoWay}"
+                         Margin="0,0,0,12"
+                         AutomationProperties.Name="Passwort" />
+
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Verbindung testen"
+                        Command="{Binding TestConnectionCommand}"
+                        Padding="12,6"
+                        AutomationProperties.Name="Datenbankverbindung testen" />
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0"
+                           Text="{Binding ConnectionTestResult}"
+                           TextWrapping="Wrap"
+                           AutomationProperties.Name="Ergebnis der Verbindungspruefung"
+                           Visibility="{Binding HasTestResult, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{StaticResource BrushError}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding TestSuccess}" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource BrushSuccess}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <Button Content="Profil speichern"
+                    Command="{Binding SaveProfileCommand}"
+                    HorizontalAlignment="Left"
+                    Padding="12,6"
+                    AutomationProperties.Name="Verbindungsprofil speichern" />
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

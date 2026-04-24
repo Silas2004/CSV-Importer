@@ -1,0 +1,59 @@
+<UserControl x:Class="CsvImporter.WPF.Views.ImportConfigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:CsvImporter.Core.Models;assembly=CsvImporter.Core">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="8" MaxWidth="500">
+            <TextBlock Text="Import Configuration" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+
+            <!-- Transaction Mode -->
+            <GroupBox Header="Transaction Mode" Margin="0,0,0,12" Padding="8">
+                <StackPanel>
+                    <RadioButton Content="All or Nothing — single transaction for entire file"
+                                 IsChecked="{Binding SelectedTxMode, Converter={StaticResource EnumBoolConverter}, ConverterParameter=AllOrNothing}"
+                                 Margin="0,2" />
+                    <RadioButton Content="Batch — commit after each batch"
+                                 IsChecked="{Binding SelectedTxMode, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Batch}"
+                                 Margin="0,2" />
+                    <RadioButton Content="Row by Row — commit after every row"
+                                 IsChecked="{Binding SelectedTxMode, Converter={StaticResource EnumBoolConverter}, ConverterParameter=RowByRow}"
+                                 Margin="0,2" />
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0"
+                                Visibility="{Binding ShowBatchSize, Converter={StaticResource BoolToVisibility}}">
+                        <Label Content="Batch Size:" />
+                        <TextBox Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}"
+                                 Width="80" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Error Behavior -->
+            <GroupBox Header="On Error" Margin="0,0,0,12" Padding="8">
+                <StackPanel>
+                    <RadioButton Content="Abort — stop and rollback"  Margin="0,2"
+                                 IsChecked="{Binding OnError, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Abort}" />
+                    <RadioButton Content="Skip — skip bad rows"       Margin="0,2"
+                                 IsChecked="{Binding OnError, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Skip}" />
+                    <RadioButton Content="Collect — log errors and continue" Margin="0,2"
+                                 IsChecked="{Binding OnError, Converter={StaticResource EnumBoolConverter}, ConverterParameter=Collect}" />
+                </StackPanel>
+            </GroupBox>
+
+            <!-- Encoding and Delimiter -->
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                    <Label Content="Encoding" />
+                    <ComboBox ItemsSource="{Binding EncodingOptions}" SelectedItem="{Binding Encoding}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Label Content="Delimiter" />
+                    <ComboBox ItemsSource="{Binding DelimiterOptions}" SelectedItem="{Binding Delimiter}" IsEditable="True" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

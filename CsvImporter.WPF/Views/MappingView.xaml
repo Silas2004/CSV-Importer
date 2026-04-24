@@ -1,0 +1,143 @@
+<UserControl x:Class="CsvImporter.WPF.Views.MappingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Spaltenmapping"
+                       FontSize="{StaticResource FontMd}" FontWeight="SemiBold" />
+            <TextBlock Text="Datenbankpalten (links) werden CSV-Spalten (rechts) zugewiesen."
+                       Foreground="{StaticResource BrushTextMuted}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- Toolbar -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Content="⟳ Auto-Mapping"  Command="{Binding AutoMatchCommand}"   Padding="12,6" Margin="0,0,8,0" />
+            <Button Content="↺ Zur&#252;cksetzen"  Command="{Binding ResetMappingCommand}" Padding="12,6" Margin="0,0,8,0"
+                    Style="{StaticResource ButtonGhost}" />
+            <Button Content="💾 Mapping speichern" Command="{Binding SaveMappingCommand}" Padding="12,6"
+                    Style="{StaticResource ButtonGhost}" />
+        </StackPanel>
+
+        <!-- DB-centric mapping grid -->
+        <DataGrid Grid.Row="2" x:Name="MappingGrid"
+                  ItemsSource="{Binding MappingRows}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="False"
+                  CanUserResizeColumns="True">
+            <DataGrid.Columns>
+
+                <!-- DB Column name -->
+                <DataGridTextColumn Header="DB-Spalte"
+                                    Binding="{Binding DbColumn.Name}"
+                                    Width="160" IsReadOnly="True" />
+
+                <!-- DB Data type -->
+                <DataGridTextColumn Header="Typ"
+                                    Binding="{Binding DbColumn.DataType}"
+                                    Width="110" IsReadOnly="True" />
+
+                <!-- Required / Optional badge -->
+                <DataGridTemplateColumn Header="Pflicht" Width="90">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border HorizontalAlignment="Left" Margin="4,0">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background"      Value="#20F44747" />
+                                        <Setter Property="BorderBrush"     Value="#40F44747" />
+                                        <Setter Property="BorderThickness" Value="1" />
+                                        <Setter Property="CornerRadius"    Value="3" />
+                                        <Setter Property="Padding"         Value="5,1" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DbColumn.IsNullable}" Value="True">
+                                                <Setter Property="Background"  Value="#20858585" />
+                                                <Setter Property="BorderBrush" Value="#40858585" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock FontSize="{StaticResource FontSm}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text"       Value="Pflicht" />
+                                            <Setter Property="Foreground" Value="{StaticResource BrushError}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding DbColumn.IsNullable}" Value="True">
+                                                    <Setter Property="Text"       Value="Optional" />
+                                                    <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Status indicator -->
+                <DataGridTemplateColumn Header="&#9679;" Width="40">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="10" Height="10" HorizontalAlignment="Center"
+                                     Fill="{Binding Status,
+                                            Converter={StaticResource MappingStatusToColor}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Score -->
+                <DataGridTextColumn Header="Score"
+                                    Binding="{Binding Score, Converter={StaticResource ScoreToPercent}}"
+                                    Width="60" IsReadOnly="True" />
+
+                <!-- CSV column dropdown -->
+                <DataGridTemplateColumn Header="CSV-Spalte" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding DataContext.CsvColumns,
+                                                   RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                      SelectedItem="{Binding SelectedCsvColumn,
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="Name"
+                                      BorderThickness="0"
+                                      Background="Transparent" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Ignore toggle -->
+                <DataGridTemplateColumn Header="Ignorieren" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsIgnored, UpdateSourceTrigger=PropertyChanged}"
+                                      HorizontalAlignment="Center" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status bar -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,8,0,0">
+            <TextBlock Text="{Binding MappingRows.Count, StringFormat='Gesamt: {0}'}"
+                       Foreground="{StaticResource BrushTextMuted}" Margin="0,0,16,0" />
+            <TextBlock Text="&#10003; Alle Pflichtfelder zugewiesen — bereit."
+                       Foreground="{StaticResource BrushSuccess}"
+                       Visibility="{Binding CanProceed, Converter={StaticResource BoolToVisibility}}" />
+            <TextBlock Text="&#10007; Pflichtfelder fehlen — Import blockiert."
+                       Foreground="{StaticResource BrushError}"
+                       Visibility="{Binding CanProceed, Converter={StaticResource InvertBoolToVisibility}}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
+

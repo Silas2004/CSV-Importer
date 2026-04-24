@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CsvImporter.Core\CsvImporter.Core.csproj" />
+    <ProjectReference Include="..\CsvImporter.Adapters\CsvImporter.Adapters.csproj" />
+    <ProjectReference Include="..\CsvImporter.FileSystem\CsvImporter.FileSystem.csproj" />
+    <ProjectReference Include="..\CsvImporter.Mapping\CsvImporter.Mapping.csproj" />
+  </ItemGroup>
+
+</Project>

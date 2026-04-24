@@ -1,0 +1,168 @@
+<UserControl x:Class="CsvImporter.WPF.Views.ImportProgressView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="180" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Import"
+                       FontSize="{StaticResource FontMd}" FontWeight="SemiBold" />
+        </StackPanel>
+
+        <!-- ── Inline config ──────────────────────────────────────────────── -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="0,0,0,12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Transaktion -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="Transaktionsmodus"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               FontSize="{StaticResource FontSm}"
+                               Margin="0,0,0,6" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Alles oder nichts"
+                                     IsChecked="{Binding TxMode,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=AllOrNothing}" />
+                        <RadioButton Content="Batch"
+                                     IsChecked="{Binding TxMode,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=Batch}" />
+                        <RadioButton Content="Zeilenweise"
+                                     IsChecked="{Binding TxMode,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=RowByRow}" />
+                        <StackPanel Orientation="Horizontal" Margin="16,0,0,0"
+                                    Visibility="{Binding ShowBatchSize, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="Batch-Gr&#246;&#223;e:" VerticalAlignment="Center" Margin="0,0,6,0"
+                                       Foreground="{StaticResource BrushTextMuted}" />
+                            <TextBox Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}"
+                                     Width="70" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Fehlerverhalten -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                    <TextBlock Text="Bei Fehler"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               FontSize="{StaticResource FontSm}"
+                               Margin="0,0,0,6" />
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="Abbrechen"
+                                     IsChecked="{Binding OnError,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=Abort}" />
+                        <RadioButton Content="&#220;berspringen"
+                                     IsChecked="{Binding OnError,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=Skip}" />
+                        <RadioButton Content="Fehler sammeln"
+                                     IsChecked="{Binding OnError,
+                                     Converter={StaticResource EnumBoolConverter},
+                                     ConverterParameter=Collect}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Start / Cancel -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <Button Content="▶  Import starten"
+                            Command="{Binding StartImportCommand}"
+                            Padding="16,8" Margin="0,0,8,0"
+                            Visibility="{Binding IsRunning, Converter={StaticResource InvertBoolToVisibility}}" />
+                    <Button Content="■  Abbrechen"
+                            Command="{Binding CancelCommand}"
+                            Padding="16,8"
+                            Style="{StaticResource ButtonGhost}"
+                            Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
+                    <TextBlock Text="L&#228;uft…" VerticalAlignment="Center" Margin="12,0,0,0"
+                               Foreground="{StaticResource BrushAccent}"
+                               Visibility="{Binding IsRunning, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ── Job cards ──────────────────────────────────────────────────── -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Jobs}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="60" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding FileName}"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding TargetTable}"
+                                               Foreground="{StaticResource BrushTextMuted}"
+                                               FontSize="{StaticResource FontSm}"
+                                               Margin="0,2,0,6" />
+                                    <ProgressBar Value="{Binding RowsDone}"
+                                                 Maximum="{Binding RowsTotal, FallbackValue=1}"
+                                                 Margin="0,0,0,4" />
+                                    <TextBlock FontSize="{StaticResource FontSm}"
+                                               Foreground="{StaticResource BrushTextMuted}">
+                                        <Run Text="{Binding RowsDone}" />
+                                        <Run Text=" / " />
+                                        <Run Text="{Binding RowsTotal}" />
+                                        <Run Text=" Zeilen" />
+                                    </TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center"
+                                            HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding Status, Converter={StaticResource JobStatusToIcon}}"
+                                               FontSize="22" HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding Status}"
+                                               FontSize="{StaticResource FontSm}"
+                                               Foreground="{StaticResource BrushTextMuted}"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- ── Log ──────────────────────────────────────────────────────────── -->
+        <GroupBox Grid.Row="3" Header="Log" Margin="0,8,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock Text="{Binding GlobalLog}"
+                           FontFamily="{StaticResource FontMono}"
+                           FontSize="{StaticResource FontSm}"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource BrushTextMuted}" />
+            </ScrollViewer>
+        </GroupBox>
+
+        <!-- ── Footer totals ─────────────────────────────────────────────── -->
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,8,0,0">
+            <TextBlock Foreground="{StaticResource BrushSuccess}" Margin="0,0,20,0">
+                <Run Text="&#10003;" />
+                <Run Text="{Binding TotalCommitted}" />
+                <Run Text="committet" />
+            </TextBlock>
+            <TextBlock Foreground="{StaticResource BrushError}">
+                <Run Text="&#10007;" />
+                <Run Text="{Binding TotalFailed}" />
+                <Run Text="fehlgeschlagen" />
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</UserControl>
+
