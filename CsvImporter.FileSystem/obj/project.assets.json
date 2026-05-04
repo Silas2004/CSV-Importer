@@ -18,6 +18,54 @@
           "buildTransitive/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "protobuf-net/3.2.0": {
+        "type": "package",
+        "dependencies": {
+          "protobuf-net.Core": "3.2.0"
+        },
+        "compile": {
+          "lib/net6.0/protobuf-net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/protobuf-net.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "protobuf-net.Core/3.2.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections.Immutable": "7.0.0"
+        },
+        "compile": {
+          "lib/net6.0/protobuf-net.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/protobuf-net.Core.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Collections.Immutable/7.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
       "System.Security.Cryptography.ProtectedData/9.0.0": {
         "type": "package",
         "compile": {
@@ -39,7 +87,8 @@
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "CommunityToolkit.Mvvm": "8.4.0",
-          "System.Security.Cryptography.ProtectedData": "9.0.0"
+          "System.Security.Cryptography.ProtectedData": "9.0.0",
+          "protobuf-net": "3.1.34"
         },
         "compile": {
           "bin/placeholder/CsvImporter.Core.dll": {}
@@ -93,6 +142,74 @@
         "lib/netstandard2.1/CommunityToolkit.Mvvm.xml"
       ]
     },
+    "protobuf-net/3.2.0": {
+      "sha512": "f/LaBYtr5bQph2bJ4XAcYTqoIasxbvQKgJYWWvs9PDSi4xniVuP7q0syenRpTFgJcB35lZR/aeEaaZyCQDYJDQ==",
+      "type": "package",
+      "path": "protobuf-net/3.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/protobuf-net.dll",
+        "lib/net462/protobuf-net.xml",
+        "lib/net6.0/protobuf-net.dll",
+        "lib/net6.0/protobuf-net.xml",
+        "lib/netstandard2.0/protobuf-net.dll",
+        "lib/netstandard2.0/protobuf-net.xml",
+        "lib/netstandard2.1/protobuf-net.dll",
+        "lib/netstandard2.1/protobuf-net.xml",
+        "protobuf-net.3.2.0.nupkg.sha512",
+        "protobuf-net.nuspec",
+        "protobuf-net.png"
+      ]
+    },
+    "protobuf-net.Core/3.2.0": {
+      "sha512": "wRlIIYvJM6HfHP/0OljFTlRSx7FHZ65XIbBIvnzRRG13FZ1NiMp2Tgogd3PbYQyU3L/2NR9z8689QZCcAOJvfA==",
+      "type": "package",
+      "path": "protobuf-net.core/3.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net462/protobuf-net.Core.dll",
+        "lib/net462/protobuf-net.Core.xml",
+        "lib/net6.0/protobuf-net.Core.dll",
+        "lib/net6.0/protobuf-net.Core.xml",
+        "lib/netstandard2.0/protobuf-net.Core.dll",
+        "lib/netstandard2.0/protobuf-net.Core.xml",
+        "lib/netstandard2.1/protobuf-net.Core.dll",
+        "lib/netstandard2.1/protobuf-net.Core.xml",
+        "protobuf-net.core.3.2.0.nupkg.sha512",
+        "protobuf-net.core.nuspec",
+        "protobuf-net.png"
+      ]
+    },
+    "System.Collections.Immutable/7.0.0": {
+      "sha512": "dQPcs0U1IKnBdRDBkrCTi1FoajSTBzLcVTpjO4MBCMC7f4pDOIPzgBoX8JjG7X6uZRJ8EBxsi8+DR1JuwjnzOQ==",
+      "type": "package",
+      "path": "system.collections.immutable/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "README.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Collections.Immutable.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Collections.Immutable.targets",
+        "lib/net462/System.Collections.Immutable.dll",
+        "lib/net462/System.Collections.Immutable.xml",
+        "lib/net6.0/System.Collections.Immutable.dll",
+        "lib/net6.0/System.Collections.Immutable.xml",
+        "lib/net7.0/System.Collections.Immutable.dll",
+        "lib/net7.0/System.Collections.Immutable.xml",
+        "lib/netstandard2.0/System.Collections.Immutable.dll",
+        "lib/netstandard2.0/System.Collections.Immutable.xml",
+        "system.collections.immutable.7.0.0.nupkg.sha512",
+        "system.collections.immutable.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
     "System.Security.Cryptography.ProtectedData/9.0.0": {
       "sha512": "CJW+x/F6fmRQ7N6K8paasTw9PDZp4t7G76UjGNlSDgoHPF0h08vTzLYbLZpOLEJSg35d5wy2jCXGo84EN05DpQ==",
       "type": "package",
@@ -139,23 +256,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\silas.timmermann\\.nuget\\packages\\": {},
+    "C:\\Users\\silas\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.FileSystem\\CsvImporter.FileSystem.csproj",
+      "projectUniqueName": "C:\\Users\\silas\\source\\repos\\CSV-ImporterExtended\\CsvImporter.FileSystem\\CsvImporter.FileSystem.csproj",
       "projectName": "CsvImporter.FileSystem",
-      "projectPath": "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.FileSystem\\CsvImporter.FileSystem.csproj",
-      "packagesPath": "C:\\Users\\silas.timmermann\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.FileSystem\\obj\\",
+      "projectPath": "C:\\Users\\silas\\source\\repos\\CSV-ImporterExtended\\CsvImporter.FileSystem\\CsvImporter.FileSystem.csproj",
+      "packagesPath": "C:\\Users\\silas\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\silas\\source\\repos\\CSV-ImporterExtended\\CsvImporter.FileSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\silas.timmermann\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\silas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -164,14 +281,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0-windows7.0": {
           "targetAlias": "net9.0-windows",
           "projectReferences": {
-            "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.Core\\CsvImporter.Core.csproj": {
-              "projectPath": "C:\\Users\\silas.timmermann\\Downloads\\CsvImporter\\CsvImporter\\CsvImporter.Core\\CsvImporter.Core.csproj"
+            "C:\\Users\\silas\\source\\repos\\CSV-ImporterExtended\\CsvImporter.Core\\CsvImporter.Core.csproj": {
+              "projectPath": "C:\\Users\\silas\\source\\repos\\CSV-ImporterExtended\\CsvImporter.Core\\CsvImporter.Core.csproj"
             }
           }
         }
@@ -186,7 +304,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net9.0-windows7.0": {
@@ -207,8 +325,20 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "CsvImporter.Core hängt von protobuf-net (>= 3.1.34) ab, aber protobuf-net 3.1.34 wurde nicht gefunden. protobuf-net 3.2.0 wurde stattdessen aufgelöst.",
+      "libraryId": "protobuf-net",
+      "targetGraphs": [
+        "net9.0-windows7.0"
+      ]
+    }
+  ]
 }

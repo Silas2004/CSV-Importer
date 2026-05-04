@@ -1,5 +1,6 @@
 using System.Data;
 using CsvImporter.Core.Models;
+using System.Collections.Generic;
 
 namespace CsvImporter.Core.Interfaces;
 
@@ -17,4 +18,7 @@ public interface IDbAdapter : IAsyncDisposable
                            string targetTable, IDbTransaction tx, CancellationToken ct = default);
     Task CommitAsync(IDbTransaction tx);
     Task RollbackAsync(IDbTransaction tx);
+
+    // Execute a simple SQL query and return rows as dictionary column->value
+    Task<List<Dictionary<string, object?>>> QueryAsync(string sql, CancellationToken ct = default);
 }
