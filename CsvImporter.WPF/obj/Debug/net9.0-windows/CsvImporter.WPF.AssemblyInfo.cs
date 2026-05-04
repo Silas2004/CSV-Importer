@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CsvImporter.WPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+976deb7a4944e285df9dc1aaae2d9a58d9f5c3ac")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8859fef7af5e7c76277229f7772744a7f5c2ebc9")]
 [assembly: System.Reflection.AssemblyProductAttribute("CsvImporter.WPF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CsvImporter.WPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
