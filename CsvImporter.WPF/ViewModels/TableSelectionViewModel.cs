@@ -1,13 +1,20 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CsvImporter.Adapters;
 using CsvImporter.Core.Models;
+using CsvImporter.Core.Services;
 using CsvImporter.WPF.Models;
+using Microsoft.Win32;
 
 namespace CsvImporter.WPF.ViewModels;
 
 public partial class TableSelectionViewModel : ObservableObject, IWizardStep
 {
     private readonly ImportContext _context;
+    private readonly CustomerExportService _exportService;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanProceed))]
@@ -39,7 +46,11 @@ public partial class TableSelectionViewModel : ObservableObject, IWizardStep
             ? "Keine Verbindung — bitte zuerst ⚙ Einstellungen öffnen."
             : $"{_context.Profile.Provider}: {_context.Profile.Host}";
 
-    public TableSelectionViewModel(ImportContext context) => _context = context;
+    public TableSelectionViewModel(ImportContext context, CustomerExportService exportService)
+    {
+        _context = context;
+        _exportService = exportService;
+    }
 
     public async Task EnterAsync()
     {
@@ -49,7 +60,7 @@ public partial class TableSelectionViewModel : ObservableObject, IWizardStep
         await LoadTablesAsync();
     }
 
-    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    [RelayCommand]
     private async Task LoadTablesAsync()
     {
         if (string.IsNullOrWhiteSpace(_context.Profile.Host)) return;
@@ -101,6 +112,31 @@ public partial class TableSelectionViewModel : ObservableObject, IWizardStep
             IsLoadingSchema = false;
             OnPropertyChanged(nameof(DbColumns));
             OnPropertyChanged(nameof(CanProceed));
+        }
+    }
+
+    [RelayCommand]
+    private async Task ExportAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SelectedTable)) return;
+
+        try
+        {
+            var dlg = new SaveFileDialog { Filter = "Protobuf files (*.pb)|*.pb|All files (*.*)|*.*", FileName = "customers.pb" };
+            var res = dlg.ShowDialog();
+            if (res != true) return;
+
+            await using var adapter = DbAdapterFactory.Create(_context.Profile.Provider);
+            await adapter.ConnectAsync(_context.Profile);
+
+            var customers = await _exportService.ReadCustomersAsync(adapter, SelectedTable!);
+
+            await using var fs = File.Create(dlg.FileName!);
+            _exportService.ExportToProtobuf(customers, fs);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Export fehlgeschlagen: {ex.Message}";
         }
     }
 }
