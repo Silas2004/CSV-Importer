@@ -1,0 +1,54 @@
+# Visual Studio / Rider
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Rider
+.idea/
+
+# Generated files
+**/GeneratedMSBuildEditorConfig.editorconfig
+**/GlobalUsings.g.cs
+**/*.g.cs
+**/*.g.i.cs
+**/*_wpftmp.AssemblyInfo.cs
+**/*.assets.cache
+**/*.sourcelink.json
+
+# VSCode
+.history/
+
+# Local DBs, caches
+*.db
+*.cache
+
+# Others
+*.log
+*.vsix
+*.mpack
+
+# Ignore user-specific files
+*.DotSettings.user
+
+# Allow specific source files
+!CsvImporter.Core/**
+!CsvImporter.WPF/**
+!CsvImporter.Adapters/**
+!CsvImporter.FileSystem/**
+!CsvImporter.Mapping/**
+!CsvImporter.Tests/**

@@ -133,4 +133,23 @@ public sealed class MsSqlAdapter : IDbAdapter
     }
 
     public async ValueTask DisposeAsync() => await DisconnectAsync();
+
+    public async Task<List<Dictionary<string, object?>>> QueryAsync(string sql, CancellationToken ct = default)
+    {
+        EnsureConnected();
+        var rows = new List<Dictionary<string, object?>>();
+        await using var cmd = _connection!.CreateCommand();
+        cmd.CommandText = sql;
+        await using var reader = await cmd.ExecuteReaderAsync(ct);
+        while (await reader.ReadAsync(ct))
+        {
+            var row = new Dictionary<string, object?>();
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+            }
+            rows.Add(row);
+        }
+        return rows;
+    }
 }
